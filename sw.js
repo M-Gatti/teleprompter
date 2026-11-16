@@ -1,5 +1,5 @@
 // Cache para funcionar sem internet. Troque a versão a cada atualização do app.
-const VERSAO = 'tp-v1';
+const VERSAO = 'tp-v2';
 const ARQUIVOS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png',
   './vendor/mammoth.browser.min.js', './vendor/pdf.min.js', './vendor/pdf.worker.min.js'];
 

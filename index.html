@@ -28,8 +28,10 @@
   svg{display:block}
 
   /* ===== editor ===== */
-  #editor{max-width:1000px;margin:0 auto;padding:24px 20px 140px}
-  header{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+  #editor{max-width:1100px;margin:0 auto;padding:18px 20px 16px;height:100vh;height:100dvh;display:flex;flex-direction:column}
+  #roteiroCard{flex:1;display:flex;flex-direction:column;min-height:0;margin-bottom:14px}
+  #roteiroCard textarea{flex:1;min-height:90px;resize:none}
+  header{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex:none}
   .logo{width:50px;height:50px;border-radius:16px;background:linear-gradient(135deg,var(--brand),var(--brand2));display:grid;place-items:center;color:#fff;box-shadow:0 8px 22px rgba(91,95,240,.35)}
   header h1{font-size:25px;margin:0;font-weight:800;letter-spacing:-.01em}
   header p{margin:2px 0 0;color:var(--muted);font-size:14px}
@@ -81,9 +83,33 @@
   .item .n small{display:block;color:var(--muted);font-weight:400;font-size:12px}
   .item button{padding:9px 12px;border-radius:10px;background:var(--card);border:1px solid var(--line);font-size:13px;font-weight:600}
   .empty{color:var(--muted);font-size:14px;padding:6px 2px}
-  .go{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;align-items:center;gap:12px;z-index:10;
+  .go{flex:none;align-self:center;display:flex;align-items:center;gap:12px;
     background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;font-weight:800;font-size:19px;padding:18px 44px;border-radius:999px;box-shadow:0 12px 34px rgba(91,95,240,.45)}
-  .go:active{transform:translateX(-50%) scale(.97)}
+  .go:active{transform:scale(.97)}
+  /* telas próprias (ajustes, roteiros salvos) */
+  .view{position:fixed;inset:0;background:var(--bg);overflow-y:auto;z-index:25;display:none;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+  .view.on{display:block}
+  .vwrap{max-width:1100px;margin:0 auto;padding:18px 20px 40px}
+  /* painel rápido durante a leitura */
+  #quick{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(112px + env(safe-area-inset-bottom));width:min(680px,94vw);max-height:calc(100% - 150px);overflow-y:auto;z-index:6;display:none;
+    background:color-mix(in srgb,var(--card) 97%,transparent);color:var(--text);border:1px solid var(--line);border-radius:24px;padding:14px;box-shadow:var(--shadow)}
+  #quick.on{display:block}
+  #quick .qh{display:flex;align-items:center;gap:10px;margin:0 2px 10px;font-weight:800;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--brand)}
+  #quick .qh .grow{flex:1}
+  #quick .grid{grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:8px}
+  #quick .set{min-height:56px;padding:6px 6px 6px 14px}
+  #quick .rb{width:46px;height:46px}
+  .set.cs{flex-wrap:wrap;padding:10px 12px 12px 14px}
+  .set.cs .lbl{flex:1 0 100%}
+  .set.cs .chips{width:100%;gap:6px}
+  .set.cs .chip{padding:8px 13px;font-size:13.5px;background:var(--card)}
+  .set.cs .chip.on{background:var(--brand);color:#fff}
+  @media (orientation:landscape){
+    #quick{left:auto;right:16px;top:16px;transform:none;width:min(440px,40vw);max-height:none;bottom:calc(112px + env(safe-area-inset-bottom))}
+    #quick .grid{grid-template-columns:1fr}
+  }
+  .tlog{margin-top:8px;font-size:13.5px;line-height:1.7;color:var(--muted);max-height:220px;overflow-y:auto}
+  .tlog b{color:var(--text)}
   #msg{position:fixed;left:50%;top:20px;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:12px 20px;border-radius:14px;font-weight:600;font-size:14px;opacity:0;transition:.25s;pointer-events:none;z-index:20;max-width:90vw;text-align:center}
   #msg.show{opacity:1}
 
@@ -101,7 +127,7 @@
   #script.al-center .bloco{justify-content:center} #script.al-center .bloco::after{display:none}
   #script .dir{color:var(--pdir);font-weight:500;font-style:italic;font-size:calc(var(--dsz)*1em);letter-spacing:0;text-transform:none}
   #script.nodirs .dir{display:none} #script.noblocks .bloco{display:none}
-  .pad-top{height:var(--gpos)} .pad-bottom{height:90vh}
+  .pad-top{height:var(--gpos)} .pad-bottom{height:90%}
   #guide{position:absolute;left:0;right:0;top:var(--gpos);height:calc(var(--fs)*var(--lh));pointer-events:none;z-index:0}
   #guide .band{position:absolute;inset:0;background:linear-gradient(90deg,transparent,var(--guide) 8%,var(--guide) 92%,transparent);opacity:var(--gop)}
   #guide .ln{position:absolute;left:4%;right:4%;bottom:0;height:3px;border-radius:3px;background:var(--guide);display:none}
@@ -145,9 +171,9 @@
 <main id="editor">
   <header>
     <div class="logo"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 6h16M4 11h16M4 16h10"/></svg></div>
-    <div class="grow"><h1>Teleprompter</h1><p>Cole ou abra o roteiro, ajuste e grave.</p></div>
+    <div class="grow"><h1>Teleprompter</h1><p>Cole ou abra o roteiro e grave.</p></div>
     <button class="ibtn" id="installBtn" title="Instalar app" style="display:none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg></button>
-    <button class="ibtn" id="fullBtn" title="Tela cheia"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+    <button class="ibtn" id="setBtn" title="Ajustes"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
   </header>
 
   <section class="card" id="roteiroCard">
@@ -158,32 +184,45 @@
       <div class="chips">
         <button class="chip" id="openFile">📂 Abrir arquivo</button>
         <button class="chip" id="saveScript">💾 Salvar</button>
+        <button class="chip" id="savedBtn">📚 Salvos</button>
         <button class="chip" id="clear">Limpar</button>
       </div>
       <input type="file" id="file" accept=".txt,.md,.html,.htm,.docx,.pdf,text/plain,text/html,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden>
     </div>
   </section>
 
-  <section class="card">
-    <h2>Ajustes <span class="grow"></span><button class="chip" id="advBtn">Mostrar avançado</button></h2>
-    <div class="tabs" id="tabs"></div>
-    <div id="panel"></div>
-  </section>
-
-  <section class="card">
-    <h2>Roteiros salvos</h2>
-    <div class="list" id="scripts"></div>
-  </section>
-
-  <section class="card">
-    <h2>Perfis de ajustes</h2>
-    <div class="tfoot" style="margin:0 0 12px"><input type="text" id="profName" placeholder="Nome do perfil (ex.: Estúdio, Sala clara)" style="flex:1"><button class="chip on" id="profSave">Salvar perfil atual</button></div>
-    <div class="list" id="profiles"></div>
-    <div class="tfoot"><button class="chip" id="resetAll">Restaurar padrões</button></div>
-  </section>
-
   <button class="go" id="start"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5z"/></svg>Começar</button>
 </main>
+
+<section class="view" id="setView">
+  <div class="vwrap">
+    <header>
+      <button class="ibtn" data-close title="Voltar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <div class="grow"><h1>Ajustes</h1><p>Valem para todas as leituras. Durante a leitura, a engrenagem da barra abre os principais.</p></div>
+      <button class="chip" id="advBtn">Mostrar avançado</button>
+    </header>
+    <section class="card">
+      <div class="tabs" id="tabs"></div>
+      <div id="panel"></div>
+    </section>
+    <section class="card">
+      <h2>Perfis de ajustes</h2>
+      <div class="tfoot" style="margin:0 0 12px"><input type="text" id="profName" placeholder="Nome do perfil (ex.: Estúdio, Sala clara)" style="flex:1"><button class="chip on" id="profSave">Salvar perfil atual</button></div>
+      <div class="list" id="profiles"></div>
+      <div class="tfoot"><button class="chip" id="resetAll">Restaurar padrões</button></div>
+    </section>
+  </div>
+</section>
+
+<section class="view" id="savedView">
+  <div class="vwrap">
+    <header>
+      <button class="ibtn" data-close title="Voltar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <div class="grow"><h1>Roteiros salvos</h1><p>Toque em Abrir para carregar no editor.</p></div>
+    </header>
+    <section class="card"><div class="list" id="scripts"></div></section>
+  </div>
+</section>
 
 <section id="prompter">
   <div id="guide"><div class="band"></div><div class="ln"></div><div class="ar l"></div><div class="ar r"></div></div>
@@ -193,6 +232,7 @@
   <div id="top"><div id="state"><span class="dot"></span><span id="stateTxt">Pausado</span></div><div id="clocks"><span id="bclock"></span><span id="clock">0:00</span></div></div>
   <div id="count"></div>
   <div id="toast"></div>
+  <div id="quick"><div class="qh">Ajustes rápidos<span class="grow"></span><button class="rb" data-a="quick" title="Fechar" style="font-size:20px">✕</button></div><div id="qpanel"></div></div>
   <div id="dock">
     <button class="db" data-a="exit" title="Sair"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     <button class="db hide-sm" data-a="top" title="Início"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5h14M12 9v10M7 14l5-5 5 5"/></svg></button>
@@ -201,8 +241,8 @@
     <button class="db hide-sm" data-a="nextBlock" title="Próximo bloco"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5l7 7-7 7M15 5v14"/></svg></button>
     <div class="grp"><button class="db" data-a="slower">−</button><div class="v"><b id="dSp"></b>veloc.</div><button class="db" data-a="faster">+</button></div>
     <div class="grp"><button class="db" data-a="smaller" style="font-size:14px">A−</button><div class="v"><b id="dFs"></b>letra</div><button class="db" data-a="bigger" style="font-size:19px">A+</button></div>
-    <div class="vsep hide-sm"></div>
-    <button class="db hide-sm" data-a="full" title="Tela cheia"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+    <div class="vsep"></div>
+    <button class="db" data-a="quick" title="Ajustes rápidos"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
   </div>
 </section>
 
@@ -232,12 +272,12 @@ const THEMES = {
 // t: step | tog | sel | col ; adv: só aparece em "Mostrar avançado"
 const TABS = [
  {id:'apar', n:'🎨 Aparência', s:[
-  {k:'theme', t:'sel', n:'Tema de cores', d:'claro', o:Object.entries(THEMES).map(([k,v])=>[k,v.n])},
+  {k:'theme', t:'sel', n:'Tema de cores', q:'Tema', d:'claro', o:Object.entries(THEMES).map(([k,v])=>[k,v.n])},
   {k:'font', t:'sel', n:'Fonte', d:'Inter', o:[['Inter','Inter (padrão)'],['Lexend','Lexend (leitura fácil)'],['Atkinson Hyperlegible','Atkinson (muito legível)'],['Source Serif 4','Serifada'],['Roboto Mono','Monoespaçada']]},
-  {k:'fs', t:'step', n:'Tamanho da letra', d:60, min:24, max:160, st:2, f:v=>v},
+  {k:'fs', t:'step', n:'Tamanho da letra', q:'Letra', d:60, min:24, max:160, st:2, f:v=>v},
   {k:'fw', t:'sel', n:'Peso da letra', d:'600', o:[['400','Normal'],['500','Médio'],['600','Seminegrito'],['700','Negrito'],['800','Extra negrito']]},
   {k:'al', t:'sel', n:'Alinhamento', d:'left', o:[['left','Esquerda'],['center','Centro'],['justify','Justificado']]},
-  {k:'mw', t:'step', n:'Largura do texto', d:86, min:40, max:100, st:2, f:v=>v+'%'},
+  {k:'mw', t:'step', n:'Largura do texto', q:'Largura', d:86, min:40, max:100, st:2, f:v=>v+'%'},
   {k:'lh', t:'step', n:'Espaço entre linhas', d:1.45, min:1, max:2.4, st:.05, f:v=>(+v).toFixed(2)},
   {k:'pg', t:'step', n:'Espaço entre parágrafos', d:.6, min:0, max:2.5, st:.1, f:v=>(+v).toFixed(1), adv:1},
   {k:'lsp', t:'step', n:'Espaço entre letras', d:0, min:-.03, max:.15, st:.01, f:v=>(+v).toFixed(2), adv:1},
@@ -251,18 +291,18 @@ const TABS = [
   {k:'cdr', t:'col', n:'Cor das [direções]', sub:'tema Personalizado', d:'#0ea5a4', adv:1},
  ]},
  {id:'faixa', n:'📍 Faixa de leitura', s:[
-  {k:'gon', t:'tog', n:'Mostrar faixa de leitura', d:true},
-  {k:'gpos', t:'step', n:'Posição', sub:'distância do topo; perto da câmera', d:24, min:5, max:70, st:2, f:v=>v+'%'},
-  {k:'gst', t:'sel', n:'Estilo', d:'both', o:[['both','Faixa + setas'],['band','Só faixa'],['arrows','Só setas'],['line','Linha embaixo']]},
+  {k:'gon', t:'tog', n:'Mostrar faixa de leitura', q:'Faixa de leitura', d:true},
+  {k:'gpos', t:'step', n:'Posição', q:'Posição da faixa', sub:'distância do topo; perto da câmera', d:24, min:5, max:70, st:2, f:v=>v+'%'},
+  {k:'gst', t:'sel', n:'Estilo', q:'Estilo da faixa', d:'both', o:[['both','Faixa + setas'],['band','Só faixa'],['arrows','Só setas'],['line','Linha embaixo']]},
   {k:'gcol', t:'col', n:'Cor da faixa', d:'#ffd54d', sub:'escolher desliga a cor do tema'},
   {k:'gtheme', t:'tog', n:'Usar a cor do tema', d:true},
   {k:'gop', t:'step', n:'Intensidade da faixa', d:32, min:5, max:80, st:3, f:v=>v+'%', adv:1},
  ]},
  {id:'rolar', n:'⏩ Rolagem', s:[
-  {k:'sp', t:'step', n:'Velocidade', d:35, min:3, max:250, st:1, f:v=>v, stepKey:'spst'},
+  {k:'sp', t:'step', n:'Velocidade', q:'Velocidade', d:35, min:3, max:250, st:1, f:v=>v, stepKey:'spst'},
   {k:'spst', t:'step', n:'Passo do + e −', sub:'quanto muda a cada toque', d:5, min:1, max:20, st:1, f:v=>v, adv:1},
   {k:'ramp', t:'tog', n:'Partida suave', sub:'acelera em 1 s ao começar', d:true, adv:1},
-  {k:'backn', t:'step', n:'Quanto o "voltar" volta', d:2, min:1, max:8, st:1, f:v=>v+' linhas', adv:1},
+  {k:'backn', t:'step', n:'Quanto o "voltar" volta', sub:'botão ↺, seta ← e S Pen', d:5, min:1, max:20, st:1, f:v=>v+' linhas'},
   {k:'wpm', t:'step', n:'Seu ritmo de fala', sub:'para as estimativas de tempo', d:140, min:90, max:220, st:5, f:v=>v+' ppm', adv:1},
  ]},
  {id:'blocos', n:'🧩 Blocos e direções', s:[
@@ -285,45 +325,60 @@ const TABS = [
   {k:'tap', t:'sel', n:'Toque na tela', d:'toggle', o:[['toggle','Pausa / continua'],['dock','Só mostra os botões']]},
   {k:'spen', t:'tog', n:'Controle pela S Pen', sub:'via controles de mídia (veja abaixo)', d:true},
   {k:'dbl', t:'sel', n:'Dois cliques no botão', d:'back', o:[['back','Volta um pouco'],['next','Próximo bloco'],['restart','Reinicia o bloco']]},
-  {k:'autofs', t:'tog', n:'Tela cheia ao começar', d:true},
   {k:'dockt', t:'step', n:'Esconder botões após', d:3, min:1, max:15, st:1, f:v=>v+' s', adv:1},
   {k:'wake', t:'tog', n:'Manter a tela acesa', d:true, adv:1},
  ]},
 ];
 const ALL = TABS.flatMap(t => t.s);
+if (LS.get('ver', 1) < 2) {
+  const old = LS.get('settings', {});
+  delete old.autofs; if (!old.backn || old.backn <= 2) old.backn = 5;
+  LS.set('settings', old); LS.set('ver', 2);
+}
+// o que aparece no painel rápido durante a leitura
+const QK = ['sp','fs','theme','al','mw','lh','pg','gon','gpos','gst'];
 const DEF = Object.fromEntries(ALL.map(s => [s.k, s.d]));
 let S = Object.assign({}, DEF, LS.get('settings', {}));
 let tab = LS.get('tab', 'apar'), adv = LS.get('adv', false);
 
+function ctl(s, q){
+  const name = q && s.q ? s.q : s.n;
+  const lbl = `<div class="lbl">${name}${s.adv && !q ? '<span class="advbadge">AV</span>' : ''}${s.sub && !q ? `<small>${s.sub}</small>` : ''}</div>`;
+  const cls = 'set' + (s.adv && !q ? ' adv' : '');
+  if (s.t === 'step') return `<div class="${cls}">${lbl}<button class="rb" data-k="${s.k}" data-d="-1">−</button><div class="v" data-v="${s.k}"></div><button class="rb" data-k="${s.k}" data-d="1">+</button></div>`;
+  if (s.t === 'tog') return `<div class="${cls} tg" data-tg="${s.k}" role="switch">${lbl}<span class="knob"></span></div>`;
+  if (s.t === 'sel' && q) return `<div class="${cls} cs">${lbl}<div class="chips">${s.o.map(([v,n]) => `<button class="chip" data-cs="${s.k}" data-val="${v}">${n}</button>`).join('')}</div></div>`;
+  if (s.t === 'sel') return `<div class="${cls}">${lbl}<select data-sel="${s.k}">${s.o.map(([v,n]) => `<option value="${v}">${n}</option>`).join('')}</select></div>`;
+  if (s.t === 'col') return `<div class="${cls}">${lbl}<input type="color" data-col="${s.k}"></div>`;
+}
 function renderTabs(){
   $('#tabs').innerHTML = TABS.map(t => `<button class="tab ${t.id===tab?'on':''}" data-t="${t.id}">${t.n}</button>`).join('');
   const t = TABS.find(x => x.id === tab);
-  let h = '<div class="grid">' + t.s.map(s => {
-    const lbl = `<div class="lbl">${s.n}${s.adv?'<span class="advbadge">AV</span>':''}${s.sub?`<small>${s.sub}</small>`:''}</div>`;
-    const cls = 'set' + (s.adv ? ' adv' : '');
-    if (s.t === 'step') return `<div class="${cls}">${lbl}<button class="rb" data-k="${s.k}" data-d="-1">−</button><div class="v" id="v_${s.k}"></div><button class="rb" data-k="${s.k}" data-d="1">+</button></div>`;
-    if (s.t === 'tog') return `<div class="${cls} tg" data-tg="${s.k}" role="switch">${lbl}<span class="knob"></span></div>`;
-    if (s.t === 'sel') return `<div class="${cls}">${lbl}<select data-sel="${s.k}">${s.o.map(([v,n]) => `<option value="${v}">${n}</option>`).join('')}</select></div>`;
-    if (s.t === 'col') return `<div class="${cls}">${lbl}<input type="color" data-col="${s.k}"></div>`;
-  }).join('') + '</div>';
+  let h = '<div class="grid">' + t.s.map(s => ctl(s, false)).join('') + '</div>';
   if (tab === 'ctrl') h += `<div class="info" style="margin-top:12px">
-    <b>Dedo ou ponta da S Pen:</b> toque pausa/continua; arrastar rola o texto.<br>
-    <b>Botão da S Pen de longe:</b> no tablet, vá em <b>Configurações → Recursos avançados → S Pen → Air actions</b>, ligue <b>"Usar controles de mídia"</b> (ou "Controles de mídia"). Aí: <b>1 clique</b> = pausa/continua · <b>2 cliques</b> = a ação escolhida acima.<br>
+    <b>Dedo ou ponta da S Pen:</b> toque pausa/continua; arrastar rola o texto. Com a ponta encostada na tela, apertar o botão lateral também pausa/continua.<br>
+    <b>Botão da S Pen de longe:</b> no tablet, vá em <b>Configurações → Recursos avançados → S Pen → Air actions</b> e ligue <b>"Usar controles de mídia"</b>. Aí: <b>1 clique</b> = pausa/continua · <b>2 cliques</b> = a ação escolhida acima · gesto <b>para a esquerda</b> = volta · gesto <b>para a direita</b> = a ação dos 2 cliques.<br>
     Se o menu flutuante da S Pen (Air command) abrir quando você aperta o botão, desligue o Air command ou use o botão com a caneta longe da tela.<br>
     <b>Controle Bluetooth / teclado:</b> espaço pausa · ↑/↓ velocidade · ←/→ volta/avança · N próximo bloco · Esc sai.</div>
-    <div class="test">Teste: aperte o botão da caneta ou do controle → <b id="testKey">aguardando…</b></div>`;
+    <div class="test"><button class="chip on" id="testOn">Ativar teste</button><span>Depois aperte o botão, clique duas vezes ou faça gestos com a caneta → <b id="testKey">aguardando…</b></span></div>
+    <div class="tlog" id="tlog"></div>`;
   $('#panel').innerHTML = h;
   $('#panel').classList.toggle('showadv', adv);
   $('#advBtn').textContent = adv ? 'Esconder avançado' : 'Mostrar avançado';
   $('#advBtn').classList.toggle('on', adv);
   syncControls();
 }
+function renderQuick(){
+  $('#qpanel').innerHTML = '<div class="grid">' + QK.map(k => ctl(ALL.find(x => x.k === k), true)).join('') + '</div>';
+  syncControls();
+}
 function syncControls(){
+  const each = (sel, fn) => document.querySelectorAll(sel).forEach(fn);
   ALL.forEach(s => {
-    if (s.t === 'step') { const e = document.getElementById('v_'+s.k); if (e) e.textContent = s.f(S[s.k]); }
-    if (s.t === 'tog') { const e = document.querySelector(`[data-tg="${s.k}"]`); if (e) e.setAttribute('aria-pressed', !!S[s.k]); }
-    if (s.t === 'sel') { const e = document.querySelector(`[data-sel="${s.k}"]`); if (e) e.value = S[s.k]; }
-    if (s.t === 'col') { const e = document.querySelector(`[data-col="${s.k}"]`); if (e) e.value = S[s.k]; }
+    if (s.t === 'step') each(`[data-v="${s.k}"]`, e => e.textContent = s.f(S[s.k]));
+    if (s.t === 'tog') each(`[data-tg="${s.k}"]`, e => e.setAttribute('aria-pressed', !!S[s.k]));
+    if (s.t === 'sel') { each(`[data-sel="${s.k}"]`, e => e.value = S[s.k]); each(`[data-cs="${s.k}"]`, e => e.classList.toggle('on', String(S[s.k]) === e.dataset.val)); }
+    if (s.t === 'col') each(`[data-col="${s.k}"]`, e => e.value = S[s.k]);
   });
 }
 function bump(k, dir){
@@ -335,22 +390,26 @@ function bump(k, dir){
 $('#tabs').addEventListener('click', e => { const b = e.target.closest('.tab'); if (!b) return; tab = b.dataset.t; LS.set('tab', tab); renderTabs(); });
 $('#advBtn').addEventListener('click', () => { adv = !adv; LS.set('adv', adv); renderTabs(); });
 let holdT = 0;
-$('#panel').addEventListener('pointerdown', e => {
-  const b = e.target.closest('.rb'); if (!b) return;
-  const go = () => bump(b.dataset.k, +b.dataset.d);
-  go(); holdT = setTimeout(function r(){ go(); holdT = setTimeout(r, 85); }, 420);
+function setColor(k, v){ S[k] = v; if (k === 'gcol') S.gtheme = false; else S.theme = 'pessoal'; apply(); }
+[$('#panel'), $('#qpanel')].forEach(el => {
+  el.addEventListener('pointerdown', e => {
+    const b = e.target.closest('.rb[data-k]'); if (!b) return;
+    const go = () => bump(b.dataset.k, +b.dataset.d);
+    go(); holdT = setTimeout(function r(){ go(); holdT = setTimeout(r, 85); }, 420);
+  });
+  ['pointerup','pointerleave','pointercancel'].forEach(ev => el.addEventListener(ev, () => clearTimeout(holdT)));
+  el.addEventListener('click', e => {
+    const t = e.target.closest('[data-tg]'); if (t) { S[t.dataset.tg] = !S[t.dataset.tg]; apply(); }
+    const c = e.target.closest('[data-cs]'); if (c) { S[c.dataset.cs] = c.dataset.val; apply(); }
+  });
+  el.addEventListener('change', e => { const t = e.target; if (t.dataset.sel) { S[t.dataset.sel] = t.value; apply(); } if (t.dataset.col) setColor(t.dataset.col, t.value); });
+  el.addEventListener('input', e => { const t = e.target; if (t.dataset.col) setColor(t.dataset.col, t.value); });
 });
-['pointerup','pointerleave','pointercancel'].forEach(ev => $('#panel').addEventListener(ev, () => clearTimeout(holdT)));
-$('#panel').addEventListener('click', e => { const t = e.target.closest('[data-tg]'); if (t) { S[t.dataset.tg] = !S[t.dataset.tg]; apply(); } });
-$('#panel').addEventListener('change', e => {
-  const t = e.target;
-  if (t.dataset.sel) { S[t.dataset.sel] = t.value; apply(); }
-  if (t.dataset.col) { S[t.dataset.col] = t.value; if (t.dataset.col === 'gcol') S.gtheme = false; else if (t.dataset.col !== 'gcol') S.theme = 'pessoal'; apply(); }
-});
-$('#panel').addEventListener('input', e => { const t = e.target; if (t.dataset.col) { S[t.dataset.col] = t.value; if (t.dataset.col === 'gcol') S.gtheme = false; else S.theme = 'pessoal'; apply(); } });
 
 function lum(hex){ const n = parseInt(hex.slice(1), 16); const r = n>>16, g = (n>>8)&255, b = n&255; return (0.299*r + 0.587*g + 0.114*b) / 255; }
 function apply(){
+  const reading = P.classList.contains('on');
+  if (reading) keepAnchor();
   const r = document.documentElement.style;
   const th = THEMES[S.theme] || THEMES.claro;
   const c = S.theme === 'pessoal' ? {bg:S.cbg, tx:S.ctx, bl:S.cbl, dr:S.cdr, gd:S.gcol} : th;
@@ -371,7 +430,7 @@ function apply(){
   const m = document.querySelector('meta[name=theme-color]'); if (m) m.content = dark ? c.bg : '#5b5ff0';
   LS.set('settings', S);
   syncControls(); estimate();
-  if (P.classList.contains('on')) measure();
+  if (reading) { restoreAnchor(); measure(); }
 }
 
 /* ============ ROTEIRO ============ */
@@ -458,7 +517,7 @@ rc.addEventListener('drop', e => { e.preventDefault(); rc.classList.remove('drop
 let scripts = LS.get('scripts', []);
 function renderScripts(){
   $('#scripts').innerHTML = scripts.length ? scripts.map((s, i) => `<div class="item"><div class="n">${esc(s.name)}<small>${new Date(s.at).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})} · ${(s.text.match(/\S+/g)||[]).length} palavras</small></div>
-    <button data-open="${i}">Abrir</button><button data-del="${i}">Apagar</button></div>`).join('') : '<div class="empty">Nenhum roteiro salvo. Use 💾 Salvar acima.</div>';
+    <button data-open="${i}">Abrir</button><button data-del="${i}">Apagar</button></div>`).join('') : '<div class="empty">Nenhum roteiro salvo. Use 💾 Salvar no editor.</div>';
 }
 $('#saveScript').addEventListener('click', () => {
   if (!text.value.trim()) return msg('Não há texto para salvar.');
@@ -471,7 +530,7 @@ $('#saveScript').addEventListener('click', () => {
 });
 $('#scripts').addEventListener('click', e => {
   const o = e.target.dataset.open, d = e.target.dataset.del;
-  if (o !== undefined) { text.value = scripts[o].text; LS.set('text', text.value); lastFileName = scripts[o].name; estimate(); window.scrollTo({top:0, behavior:'smooth'}); msg('Aberto: ' + scripts[o].name); }
+  if (o !== undefined) { text.value = scripts[o].text; LS.set('text', text.value); lastFileName = scripts[o].name; estimate(); back2(); msg('Aberto: ' + scripts[o].name); }
   if (d !== undefined) { if (e.target.dataset.sure) { scripts.splice(d, 1); LS.set('scripts', scripts); renderScripts(); } else { e.target.dataset.sure = 1; e.target.textContent = 'Confirmar?'; } }
 });
 
@@ -523,6 +582,10 @@ const ICON_PLAY = '<svg width="30" height="30" viewBox="0 0 24 24" fill="current
 const ICON_PAUSE = '<svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4.5" width="4.2" height="15" rx="1.2"/><rect x="13.8" y="4.5" width="4.2" height="15" rx="1.2"/></svg>';
 $('#bPlay').innerHTML = ICON_PLAY;
 
+// ponto de leitura guardado como fração do texto: sobrevive a mudança de letra, largura e giro da tela
+let anch = 0;
+function keepAnchor(){ const h = $('#script').offsetHeight; anch = h ? scroller.scrollTop / h : 0; }
+function restoreAnchor(){ scroller.scrollTop = anch * $('#script').offsetHeight; pos = scroller.scrollTop; }
 function guideY(){ return scroller.clientHeight * S.gpos / 100; }
 function measure(){
   const base = $('#script').offsetTop;
@@ -542,7 +605,7 @@ function tick(ts){
     const dt = Math.min(.1, (ts - last) / 1000);
     let f = 1; if (S.ramp && rampT < 1) { rampT += dt; f = Math.min(1, rampT); }
     pos += S.sp * (S.fs / 56) * dt * f;
-    scroller.scrollTop = pos; elapsed += dt;
+    scroller.scrollTop = pos; elapsed += dt; keepAnchor();
     // pausas e blocos
     const y = lineAt();
     if (S.pausem) for (let i = 0; i < pauses.length; i++) {
@@ -605,10 +668,36 @@ function dblAction(){ ({back, next: nextBlock, restart: restartBlock})[S.dbl]();
 let toastT = 0;
 function toast(t){ const e = $('#toast'); e.textContent = t; e.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => e.classList.remove('show'), 1000); }
 
-/* ---- tela cheia ---- */
-async function goFull(){ try { if (!document.fullscreenElement) await document.documentElement.requestFullscreen({navigationUI:'hide'}); } catch(e){ try { await document.documentElement.webkitRequestFullscreen(); } catch(_){} } }
-async function toggleFull(){ try { document.fullscreenElement ? await document.exitFullscreen() : await goFull(); } catch(e){} }
-$('#fullBtn').addEventListener('click', toggleFull);
+/* ---- tela cheia sempre (como aplicativo) ---- */
+// Instalado, o app já abre em tela cheia. No navegador, o primeiro toque pede a tela cheia (o navegador exige um toque).
+function isFull(){ return !!(document.fullscreenElement || document.webkitFullscreenElement) || matchMedia('(display-mode: fullscreen)').matches; }
+function goFull(){ if (isFull()) return; const d = document.documentElement; try { const r = (d.requestFullscreen || d.webkitRequestFullscreen).call(d, {navigationUI:'hide'}); if (r && r.catch) r.catch(() => {}); } catch(e){} }
+document.addEventListener('click', goFull, true);
+document.addEventListener('keydown', goFull, true);
+
+/* ---- telas (ajustes, salvos) e o botão voltar do Android ---- */
+function openView(id){ if (id === 'setView') renderTabs(); if (id === 'savedView') renderScripts(); document.getElementById(id).classList.add('on'); history.pushState({v:id}, ''); }
+function closeViews(){ let any = false; document.querySelectorAll('.view.on').forEach(v => { v.classList.remove('on'); any = true; }); return any; }
+function back2(){ if (history.state && history.state.v) history.back(); else { closeViews(); if (P.classList.contains('on')) close(); } }
+$('#setBtn').addEventListener('click', () => openView('setView'));
+$('#savedBtn').addEventListener('click', () => openView('savedView'));
+document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', back2));
+window.addEventListener('popstate', () => {
+  if (closeViews()) return;
+  if (P.classList.contains('on')) {
+    if (Q.classList.contains('on')) { toggleQuick(false); history.pushState({v:'read'}, ''); return; }
+    close();
+  }
+});
+
+/* ---- painel rápido ---- */
+const Q = $('#quick');
+function toggleQuick(on){
+  on = on === undefined ? !Q.classList.contains('on') : on;
+  Q.classList.toggle('on', on);
+  if (on) { renderQuick(); showDock(); } else if (playing) dockSoon();
+}
+Q.addEventListener('click', e => { if (e.target.closest('[data-a="quick"]')) toggleQuick(false); });
 
 /* ---- S Pen via controles de mídia ---- */
 let silent = null;
@@ -629,22 +718,41 @@ function startMedia(){
     const h = (a, fn) => { try { navigator.mediaSession.setActionHandler(a, fn); } catch(e){} };
     h('play', () => { silent.play().catch(()=>{}); press('media'); });
     h('pause', () => { silent.play().catch(()=>{}); press('media'); });
-    h('nexttrack', () => { mark('próxima faixa'); dblAction(); showDock(); });
-    h('previoustrack', () => { mark('faixa anterior'); back(); showDock(); });
-    h('seekforward', () => fwd()); h('seekbackward', () => back());
+    const on = () => P.classList.contains('on');
+    h('nexttrack', () => { mark('próxima faixa', DBLN()); if (on()) { dblAction(); showDock(); } });
+    h('previoustrack', () => { mark('faixa anterior', 'volta ' + S.backn + ' linhas'); if (on()) { back(); showDock(); } });
+    h('seekforward', () => { mark('avançar', 'avança ' + S.backn + ' linhas'); if (on()) fwd(); });
+    h('seekbackward', () => { mark('retroceder', 'volta ' + S.backn + ' linhas'); if (on()) back(); });
+    h('stop', () => { mark('parar', 'pausa'); if (on() && playing) toggle(); });
   } catch(e){}
 }
 function stopMedia(){ try { silent && silent.pause(); } catch(e){} }
 
 /* ---- botão único: 1 clique / 2 cliques ---- */
 let pressT = 0, presses = 0;
+function DBLN(){ return ({back:'volta ' + S.backn + ' linhas', next:'próximo bloco', restart:'reinicia o bloco'})[S.dbl]; }
 function press(src){
-  mark(src === 'media' ? 'botão (mídia)' : src);
-  if (!P.classList.contains('on')) return;
+  const on = P.classList.contains('on');
   presses++; clearTimeout(pressT);
-  pressT = setTimeout(() => { if (presses >= 2) dblAction(); else toggle(); presses = 0; showDock(); }, 330);
+  pressT = setTimeout(() => {
+    const two = presses >= 2; presses = 0;
+    mark(src === 'media' ? (two ? 'botão: 2 cliques' : 'botão: 1 clique') : src + (two ? ' (2x)' : ''), two ? DBLN() : 'pausa / continua');
+    if (!on) return;
+    if (two) dblAction(); else toggle();
+    showDock();
+  }, 330);
 }
-function mark(what){ const e = document.getElementById('testKey'); if (e) e.textContent = what + ' ✓ funcionando'; }
+function mark(what, act){
+  const e = document.getElementById('testKey'); if (e) e.textContent = what + ' ✓';
+  const l = document.getElementById('tlog'); if (!l) return;
+  const t = new Date().toLocaleTimeString('pt-BR');
+  l.insertAdjacentHTML('afterbegin', `<div>${t} · <b>${esc(what)}</b>${act ? ' → ' + esc(act) : ''}</div>`);
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('#testOn')) return;
+  if (!S.spen) return msg('Ligue "Controle pela S Pen" acima.');
+  startMedia(); e.target.blur(); e.target.textContent = 'Teste ativo'; mark('teste ativado', 'aperte o botão da caneta');
+});
 
 /* ---- abrir / fechar ---- */
 function open(){
@@ -652,21 +760,21 @@ function open(){
   scroller.scrollTop = 0; pos = 0; elapsed = 0; curBlock = -2; blockStart = 0; firedPauses = new Set();
   requestAnimationFrame(() => { measure(); curBlock = blockIndex(); status(); });
   setPlay(false); lockScreen(); startMedia();
+  history.pushState({v:'read'}, '');
 }
-function close(){ setPlay(false); clearInterval(pauseTimer); P.classList.remove('on'); document.body.style.overflow = ''; unlockScreen(); stopMedia(); }
-$('#start').addEventListener('click', () => { if (S.autofs) goFull(); open(); countdown(() => setPlay(true)); });
+function close(){ setPlay(false); clearInterval(pauseTimer); toggleQuick(false); P.classList.remove('on'); document.body.style.overflow = ''; unlockScreen(); stopMedia(); }
+$('#start').addEventListener('click', () => { open(); countdown(() => setPlay(true)); });
 
 /* ---- barra ---- */
 const dock = $('#dock'); let dockT = 0;
 function showDock(){ dock.classList.remove('hide'); clearTimeout(dockT); if (playing) dockSoon(); }
-function dockSoon(){ clearTimeout(dockT); dockT = setTimeout(() => playing && dock.classList.add('hide'), S.dockt * 1000); }
+function dockSoon(){ clearTimeout(dockT); dockT = setTimeout(() => playing && !Q.classList.contains('on') && dock.classList.add('hide'), S.dockt * 1000); }
 const A = {
-  exit: close, back, play: toggle, nextBlock,
+  exit: back2, back, play: toggle, nextBlock, quick: () => toggleQuick(),
   top(){ setPlay(false); jumpTo(0); elapsed = 0; firedPauses = new Set(); status(); },
   slower(){ S.sp = Math.max(3, S.sp - S.spst); apply(); toast('velocidade ' + S.sp); },
   faster(){ S.sp = Math.min(250, S.sp + S.spst); apply(); toast('velocidade ' + S.sp); },
-  smaller(){ bump('fs', -2); }, bigger(){ bump('fs', 2); },
-  full: toggleFull
+  smaller(){ bump('fs', -2); }, bigger(){ bump('fs', 2); }
 };
 dock.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; e.stopPropagation(); A[b.dataset.a](); showDock(); });
 dock.addEventListener('pointerup', e => e.stopPropagation());
@@ -677,20 +785,20 @@ scroller.addEventListener('pointerdown', e => { downY = e.clientY; moved = false
 scroller.addEventListener('pointermove', e => { if (Math.abs(e.clientY - downY) > 12) moved = true; });
 scroller.addEventListener('pointerup', e => {
   if (e.button === 2) return;
+  if (Q.classList.contains('on')) return toggleQuick(false);
   if (moved) return showDock();
   if (S.tap === 'dock' || dock.classList.contains('hide')) return showDock();
   toggle();
 });
-scroller.addEventListener('scroll', () => { if (!playing) { pos = scroller.scrollTop; curBlock = blockIndex(); status(); } });
+scroller.addEventListener('scroll', () => { if (!playing) { pos = scroller.scrollTop; keepAnchor(); curBlock = blockIndex(); status(); } });
 
 /* ---- teclado / controles ---- */
 const ONE = new Set([' ','Enter','MediaPlayPause','MediaPlay','MediaPause','k','K']);
 document.addEventListener('keydown', e => {
   if (e.target.matches && e.target.matches('textarea,input')) return;
   const k = e.key;
-  if (!P.classList.contains('on')) { mark(k === ' ' ? 'Espaço' : k); return; }
-  if (k === 'Escape') return close();
-  if (k === 'f' || k === 'F') return toggleFull();
+  if (!P.classList.contains('on')) { if (ONE.has(k)) press(k === ' ' ? 'Espaço' : k); else mark(k); return; }
+  if (k === 'Escape') return back2();
   if (k === 'ArrowUp') { e.preventDefault(); return A.faster(); }
   if (k === 'ArrowDown') { e.preventDefault(); return A.slower(); }
   if (k === 'ArrowLeft' || k === 'PageUp' || k === 'MediaTrackPrevious') { e.preventDefault(); back(); return showDock(); }
@@ -701,7 +809,7 @@ document.addEventListener('keydown', e => {
 });
 document.addEventListener('contextmenu', e => { e.preventDefault(); press('botão lateral'); });
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && P.classList.contains('on')) lockScreen(); });
-window.addEventListener('resize', () => { if (P.classList.contains('on')) measure(); });
+window.addEventListener('resize', () => { if (P.classList.contains('on')) { restoreAnchor(); measure(); curBlock = blockIndex(); status(); } });
 
 /* ---- instalar como app ---- */
 let installEvt = null;
